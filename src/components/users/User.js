@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
-import Spinner from '../layout/Spinner';
-import Repos from '../repos/Repos';
 import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Spinner from '../layout/Spinner';
+import Repos from '../repos/Repos';
 
 const User = ({ user, loading, getUser, getUserRepos, repos }) => {
   const params = useParams();
