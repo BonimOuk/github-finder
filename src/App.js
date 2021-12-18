@@ -16,6 +16,7 @@ const github = axios.create({
   baseURL: 'https://api.github.com',
   headers: { Authorization: process.env.REACT_APP_GITHUB_TOKEN },
 });
+
 const App = () => {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
@@ -84,7 +85,6 @@ const App = () => {
                 element={
                   <Fragment>
                     <Search
-                      searchUsers={searchUsers}
                       clearUsers={clearUsers}
                       showClear={users.length > 0 ? true : false}
                       setAlert={showAlert}
