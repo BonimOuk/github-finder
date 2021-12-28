@@ -1,19 +1,25 @@
 import React, { useState, useContext } from 'react';
 import GithubContext from '../../context/github/githubContext';
 import AlertContext from '../../context/alert/alertContext';
+import { searchUsers } from '../../context/github/actions';
+import { SEARCH_USERS, SET_LOADING, CLEAR_USERS } from '../../context/types';
 
-const Search = () => {
-  const githubContext = useContext(GithubContext);
-  const alertContext = useContext(AlertContext);
+function Search() {
+  const { dispatch, users } = useContext(GithubContext);
+  const { setAlert } = useContext(AlertContext);
+
   const [text, setText] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (text === '') {
-      alertContext.setAlert('Please enter something', 'light');
+      setAlert('Please enter something', 'light');
     } else {
-      githubContext.searchUsers(text);
-      setText('');
+      dispatch({ type: SET_LOADING });
+      searchUsers(text).then((users) => {
+        dispatch({ type: SEARCH_USERS, payload: users });
+        setText('');
+      });
     }
   };
 
@@ -21,12 +27,12 @@ const Search = () => {
 
   return (
     <div>
-      <form onSubmit={onSubmit} className='form'>
+      <form className='form' onSubmit={onSubmit}>
         <input
           type='text'
           name='text'
-          placeholder='Search Users...'
           value={text}
+          placeholder='Search Users...'
           onChange={onChange}
         />
         <input
@@ -35,16 +41,16 @@ const Search = () => {
           className='btn btn-dark btn-block'
         />
       </form>
-      {githubContext.users.length > 0 && (
+      {users.length > 0 ? (
         <button
           className='btn btn-light btn-block'
-          onClick={githubContext.clearUsers}
+          onClick={() => dispatch({ type: CLEAR_USERS })}
         >
           Clear
         </button>
-      )}
+      ) : null}
     </div>
   );
-};
+}
 
 export default Search;
